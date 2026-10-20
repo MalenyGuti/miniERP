@@ -1,9 +1,21 @@
-// Aquí irá la lógica real de la base de datos más adelante
-async function obtenerProductos(filtros) {
-  // Simulamos la respuesta para probar que el servidor levanta
-  return [
-    { id: 1, nombre: "Laptop Lenovo", precio: 12500, stock: 10 }
-  ];
+const pool = require('../config/db'); // Asegúrate de que esta ruta sea correcta hacia tu db.js
+
+// Función para obtener todos los productos de la BD
+async function obtenerProductos() {
+    // Hacemos la consulta SQL real
+    const [rows] = await pool.query('SELECT * FROM productos');
+    return rows;
 }
 
-module.exports = { obtenerProductos };
+// Función para guardar un producto en la BD
+async function crearProducto(datos) {
+    const { nombre, codigo, precio, stock, categoria } = datos;
+    
+    // Hacemos el INSERT real. Si 'categoria' viene vacía, le ponemos un valor por defecto
+    const query = 'INSERT INTO productos (nombre, codigo, precio, stock, categoria) VALUES (?, ?, ?, ?, ?)';
+    const [result] = await pool.query(query, [nombre, codigo, precio, stock, categoria || 'General']);
+    
+    return result.insertId; // Devolvemos el ID del producto recién creado
+}
+
+module.exports = { obtenerProductos, crearProducto };

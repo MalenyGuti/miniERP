@@ -12,7 +12,7 @@ function App() {
   const [productos, setProductos] = useState<Producto[]>([]);
 
   useEffect(() => {
-    axios.get('http://localhost:3000/api/productos')
+    axios.get('/api/productos')
       .then(response => setProductos(response.data.data))
       .catch(error => console.error('Error al obtener productos:', error));
   }, []);
