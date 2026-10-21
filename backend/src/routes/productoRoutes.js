@@ -4,8 +4,10 @@ const productoController = require('../controllers/productoController');
 const { validarProducto } = require('../middlewares/validators');
 const authenticateToken = require('../middlewares/auth');
 
+// Rutas
 router.get('/', productoController.getProductos);
 router.post('/', authenticateToken, validarProducto, productoController.createProducto);
-// Aquí irían las rutas PUT y DELETE más adelante
+router.put('/:id', authenticateToken, validarProducto, productoController.updateProducto);
+router.delete('/:id', authenticateToken, productoController.deleteProducto);
 
 module.exports = router;

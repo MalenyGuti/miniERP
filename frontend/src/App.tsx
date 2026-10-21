@@ -1,38 +1,31 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-
-interface Producto {
-  id: number;
-  nombre: string;
-  precio: number;
-  stock: number;
-}
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Layout from './Layout';
+import Inicio from './pages/Inicio';
+import Productos from './pages/Productos';
+import Clientes from './pages/Clientes';
+import Proveedores from './pages/Proveedores';
+import Usuarios from './pages/Usuarios';
+import Ventas from './pages/Ventas';
+import Compras from './pages/Compras'; 
 
 function App() {
-  const [productos, setProductos] = useState<Producto[]>([]);
-
-  useEffect(() => {
-    axios.get('/api/productos')
-      .then(response => setProductos(response.data.data))
-      .catch(error => console.error('Error al obtener productos:', error));
-  }, []);
-
   return (
-    <div style={{ padding: '20px', fontFamily: 'Arial' }}>
-      <h1>Mini ERP - Productos</h1>
-      {productos.length === 0 ? (
-        <p>No hay productos o el backend está apagado...</p>
-      ) : (
-        <ul>
-          {productos.map(p => (
-            <li key={p.id}>
-              <strong>{p.nombre}</strong> - ${p.precio} (Stock: {p.stock})
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Inicio/>} />
+          <Route path="productos" element={<Productos />} />
+          <Route path="clientes" element={<Clientes />} />
+          <Route path="proveedores" element={<Proveedores />} />
+          <Route path="usuarios" element={<Usuarios />} />
+          <Route path="ventas" element={<Ventas />} />
+          <Route path="compras" element={<Compras />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
 export default App;
+
+

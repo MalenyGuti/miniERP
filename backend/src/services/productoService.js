@@ -1,21 +1,33 @@
-const pool = require('../config/db'); // Asegúrate de que esta ruta sea correcta hacia tu db.js
+const pool = require('../config/db'); 
 
-// Función para obtener todos los productos de la BD
+// 1. LEER (GET)
 async function obtenerProductos() {
-    // Hacemos la consulta SQL real
     const [rows] = await pool.query('SELECT * FROM productos');
     return rows;
 }
 
-// Función para guardar un producto en la BD
+// 2. CREAR (POST)
 async function crearProducto(datos) {
     const { nombre, codigo, precio, stock, categoria } = datos;
-    
-    // Hacemos el INSERT real. Si 'categoria' viene vacía, le ponemos un valor por defecto
     const query = 'INSERT INTO productos (nombre, codigo, precio, stock, categoria) VALUES (?, ?, ?, ?, ?)';
     const [result] = await pool.query(query, [nombre, codigo, precio, stock, categoria || 'General']);
-    
-    return result.insertId; // Devolvemos el ID del producto recién creado
+    return result.insertId; 
 }
 
-module.exports = { obtenerProductos, crearProducto };
+// 3. ACTUALIZAR (PUT)
+async function actualizarProducto(id, datos) {
+    const { nombre, codigo, precio, stock, categoria } = datos;
+    const query = 'UPDATE productos SET nombre=?, codigo=?, precio=?, stock=?, categoria=? WHERE id=?';
+    const [result] = await pool.query(query, [nombre, codigo, precio, stock, categoria, id]);
+    return result.affectedRows; 
+}
+
+// 4. ELIMINAR (DELETE)
+async function eliminarProducto(id) {
+    const query = 'DELETE FROM productos WHERE id=?';
+    const [result] = await pool.query(query, [id]);
+    return result.affectedRows;
+}
+
+// EXPORTAMOS LAS 4 FUNCIONES
+module.exports = { obtenerProductos, crearProducto, actualizarProducto, eliminarProducto };
